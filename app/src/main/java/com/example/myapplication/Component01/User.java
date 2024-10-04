@@ -6,7 +6,7 @@ public class User {
     private String status;
     private String role;
 
-//ffff
+
     public User(String username, String password, String status, String role) {
         this.username = username;
         this.password = password;
