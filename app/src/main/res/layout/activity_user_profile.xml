@@ -1,0 +1,76 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/background_gradient"
+    android:padding="16dp">
+
+    <!-- Profile Picture -->
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_profile_placeholder"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- User ID -->
+    <TextView
+        android:id="@+id/textViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User ID: "
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Username -->
+    <TextView
+        android:id="@+id/textViewUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username: "
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/textViewEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: "
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Status -->
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: "
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Update Profile Button -->
+    <Button
+        android:id="@+id/buttonUpdateProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Profile"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/white"
+        android:padding="12dp"/>
+
+    <!-- Deactivate Account Button -->
+    <Button
+        android:id="@+id/buttonDeactivate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deactivate Account"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
+        android:padding="12dp"/>
+
+</LinearLayout>

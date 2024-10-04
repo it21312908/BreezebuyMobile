@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_blue">#003366</color>
+    <color name="secondary_blue">#004080</color>
+    <color name="blue_hover">#0056b3</color>
+    <color name="primary_yellow">#FFD700</color>
+    <color name="yellow_button">#ffcc00</color>
+    <color name="yellow_button_hover">#e6b800</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

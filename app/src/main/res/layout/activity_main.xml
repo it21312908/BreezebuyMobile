@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient">
+
+    <ImageView
+        android:id="@+id/bannerImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher_foreground_banner"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/textViewLoginDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome"
+        android:layout_below="@id/bannerImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="38sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_below="@id/textViewLoginDetails"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonCreateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:layout_below="@id/buttonLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonAllVendors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All Vendors"
+        android:layout_below="@id/buttonCreateAccount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:layout_below="@id/buttonAllVendors"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order"
+        android:layout_below="@id/buttonProfile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonProducts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Products"
+        android:layout_below="@id/buttonCart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/buttonOrderHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order History"
+        android:layout_below="@id/buttonProducts"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonOrderHistory"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/textViewFeatures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:background="@android:color/transparent"
+            android:scrollbars="vertical"
+            tools:ignore="ExtraText">
+
+            Welcome to our App! Here are some of the features you can enjoy:\n\n
+            • **User-Friendly Interface**: Navigate easily through a clean and intuitive design.\n\n
+            • **Account Management**: Create and manage your account effortlessly.\n\n
+            • **Vendors**: Explore and connect with various vendors in your area.\n\n
+            • **Order Management**: Easily place, track, and manage your orders.\n\n
+            • **Product Catalog**: Browse through a wide range of products available for purchase.\n\n
+            • **Profile Settings**: Update your profile and preferences whenever needed.\n\n
+            • **Order History**: View your past orders and re-order with a click.\n\n
+            • **Add New Products**: Vendors can add new products quickly and easily.\n\n
+            • **24/7 Support**: Get assistance anytime with our dedicated support team.\n\n
+            Thank you for using our app!
+        </TextView>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue_hover"
+        app:menu="@menu/bottom_navigation_menu" />
+</RelativeLayout>
