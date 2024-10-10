@@ -1,3 +1,11 @@
+/*
+ * User.java
+ * Author: [Dayananda I.H.M.B.L. | IT21307058]
+ * This Java class represents a User object in an Android application.
+ 
+ */
+
+
 package com.example.myapplication.Component01;
 
 public class User {
@@ -5,7 +13,6 @@ public class User {
     private String password;
     private String status;
     private String role;
-
 
     public User(String username, String password, String status, String role) {
         this.username = username;
