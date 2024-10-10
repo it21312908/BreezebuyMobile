@@ -1,5 +1,19 @@
+/*
+ * AccountCreationActivity.java
+ * Author: [Dayananda I.H.M.B.L. | IT21307058]
+ * The AccountCreationActivity allows users to create an 
+   account by submitting their username, email, and password 
+   through an API request. It handles input validation, network 
+   operations in the background, and navigates to the login screen 
+   upon successful account creation.
+ 
+ */
+
 package com.example.myapplication.Component01;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,14 +21,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,36 +41,78 @@ public class AccountCreationActivity extends AppCompatActivity {
 
     private EditText editTextUsername, editTextEmail, editTextPassword;
     private Button buttonCreateAccount;
+    private TextView buttonBackToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        initializeViews();
+        setupCreateAccountButton();
+        setupBackToLoginButton();
+    }
+
+    /**
+     * Initialize UI components (EditTexts, Buttons, TextViews).
+     */
+    private void initializeViews() {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonCreateAccount = findViewById(R.id.buttonCreateAccount);
+        buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
+    }
 
+    /**
+     * Set up click listener for the "Create Account" button.
+     * Validates input and calls the account creation task if valid.
+     */
+    private void setupCreateAccountButton() {
         buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = editTextUsername.getText().toString();
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
-
-                if (TextUtils.isEmpty(username)) {
-                    editTextUsername.setError("Username is required");
-                } else if (TextUtils.isEmpty(email)) {
-                    editTextEmail.setError("Email is required");
-                } else if (TextUtils.isEmpty(password)) {
-                    editTextPassword.setError("Password is required");
-                } else {
-                    // Call the API to create an account
-                    new CreateAccountTask(username, email, password).execute();
-                }
+                createAccount();
             }
         });
+    }
+
+    /**
+     * Set up click listener for the "Back to Login" button.
+     * Navigates to the login activity.
+     */
+    private void setupBackToLoginButton() {
+        buttonBackToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToLoginActivity();
+            }
+        });
+    }
+
+    /**
+     * Validate input fields and call the API to create an account.
+     */
+    private void createAccount() {
+        String username = editTextUsername.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+
+        // Validate input fields
+        if (TextUtils.isEmpty(username)) {
+            editTextUsername.setError("Username is required");
+        } else if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Email is required");
+        } else if (TextUtils.isEmpty(password)) {
+            editTextPassword.setError("Password is required");
+        } else {
+            // Call the API to create an account
+            new CreateAccountTask(username, email, password).execute();
+        }
     }
 
     // AsyncTask to handle network operation on a background thread
@@ -72,8 +132,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             HttpURLConnection urlConnection = null;
             try {
-                // Set up the URL connection to your backend API
-                URL url = new URL("http://192.168.250.214:44300/Auth/register");
+                URL url = new URL("https://pasindu99-001-site1.etempurl.com/Auth/register");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -81,7 +140,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                 // Create JSON object to send to the server
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("username", username);  // Username input from user
+                jsonObject.put("username", username);
                 jsonObject.put("password", password);
                 jsonObject.put("email", email);
 
@@ -90,18 +149,53 @@ public class AccountCreationActivity extends AppCompatActivity {
                 os.write(jsonObject.toString().getBytes("UTF-8"));
                 os.close();
 
-                // Get the response code to check if the request was successful
                 int responseCode = urlConnection.getResponseCode();
                 Log.d("CreateAccountTask", "Response code: " + responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    return "Account created successfully";
+                    // Read the response
+                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String inputLine;
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    Log.d("CreateAccountTask", "Response: " + response.toString());
+
+                    // Check if the response is not empty
+                    if (response.length() == 0) {
+                        return "Account created successfully";
+                    }
+
+                    // Convert response to JSON and check for success
+                    JSONObject responseObject = new JSONObject(response.toString());
+                    String status = responseObject.optString("status", null); // Check if a status field exists
+
+                    if ("success".equals(status)) {
+                        return "Account created successfully";
+                    } else {
+                        return "Failed to create account: " + responseObject.optString("message", "Unknown error");
+                    }
+                } else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    // Handle error response for bad request
+                    BufferedReader errorStream = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                    StringBuilder errorResponse = new StringBuilder();
+                    String errorLine;
+                    while ((errorLine = errorStream.readLine()) != null) {
+                        errorResponse.append(errorLine);
+                    }
+                    errorStream.close();
+                    Log.d("CreateAccountTask", "Error response: " + errorResponse.toString());
+                    return "Failed to create account. Error: " + errorResponse.toString();
                 } else {
-                    return "Failed to create account. Response code: " + responseCode;
+                    return "Unexpected response code: " + responseCode;
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("CreateAccountTask", "Error: ", e);
                 return "Error: " + e.getMessage();
             } finally {
                 // Ensure the connection is properly closed
@@ -115,6 +209,29 @@ public class AccountCreationActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Toast.makeText(AccountCreationActivity.this, result, Toast.LENGTH_SHORT).show();
+
+            if ("Account created successfully".equals(result)) {
+                // Navigate to the LoginActivity on successful account creation
+                navigateToLoginActivity();
+            }
         }
+
+        /**
+         * Navigate to the LoginActivity on successful account creation.
+         */
+        private void navigateToLoginActivity() {
+            Intent intent = new Intent(AccountCreationActivity.this, LoginActivity.class); // Change to your actual LoginActivity class
+            startActivity(intent);
+            finish(); // Optional: Close AccountCreationActivity if needed
+        }
+    }
+
+    /**
+     * Navigate to the LoginActivity from the account creation screen.
+     */
+    private void navigateToLoginActivity() {
+        Intent intent = new Intent(AccountCreationActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish(); // Optional: Close AccountCreationActivity if needed
     }
 }
