@@ -293,6 +293,8 @@ public class ProductBrowsingActivity extends AppCompatActivity implements Produc
         editor.apply();
     }
 
+
+//total amount modified
     private void updateTotalAmount() {
         double totalAmount = 0.0;
         for (Product product : filteredProductList) {
