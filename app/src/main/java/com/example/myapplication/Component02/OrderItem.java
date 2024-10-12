@@ -22,10 +22,7 @@ public class OrderItem {
         return price;
     }
 
-    // Getter for quantity
-    public int getQuantity() {
-        return quantity;
-    }
+
 
     // Getter for totalAmount
     public double getTotalAmount() {
