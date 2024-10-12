@@ -15,7 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.myapplication.R;
 
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
+import java.net.HttpURLConnection; 
 import java.net.URL;
 
 public class AddCommentDialogFragment extends DialogFragment {
