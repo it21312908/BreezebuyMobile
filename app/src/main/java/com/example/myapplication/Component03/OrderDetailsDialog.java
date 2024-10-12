@@ -63,7 +63,7 @@ public class OrderDetailsDialog extends Dialog {
         textViewCreatedAt = findViewById(R.id.textViewCreatedAt);
         buttonClose = findViewById(R.id.buttonClose);
         buttonUpdateStatus = findViewById(R.id.buttonUpdateStatus); // Initialize the update status button
-        recyclerViewItems = findViewById(R.id.recyclerViewItems); // RecyclerView for order items
+        recyclerViewItems = findViewById(R.id.recyclerViewItem); // RecyclerView for order items
 
         itemList = new ArrayList<>();
         itemAdapter = new ItemAdapter(getContext(), itemList);
