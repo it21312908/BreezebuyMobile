@@ -52,7 +52,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.VendorView
         holder.vendorComments.setText(commentsText.toString());
 
         // Set click listener to open AddCommentDialogFragment
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> { 
             // Pass userId and token to the dialog
             AddCommentDialogFragment dialog = AddCommentDialogFragment.newInstance(vendor.getId(), userId, token); // Pass token here
             dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "AddCommentDialog");
