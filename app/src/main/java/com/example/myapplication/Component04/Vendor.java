@@ -29,7 +29,7 @@ public class Vendor {
 
     public String getProduct() {
         return product;
-    }
+    } 
 
     public String getDescription() {
         return description;
