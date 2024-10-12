@@ -25,7 +25,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.VendorView
     // Update the constructor to accept token
     public VendorAdapter(Context context, List<Vendor> vendorList, String userId, String token) {
         this.context = context;
-        this.vendorList = vendorList;
+        this.vendorList = vendorList; // Initialize vendorList
         this.userId = userId; // Initialize userId
         this.token = token; // Initialize token
     }
