@@ -15,7 +15,6 @@ public class OrderItem {
     }
 
     // Getter for price
-
     public String getProductId() {
         return productId;
     }
