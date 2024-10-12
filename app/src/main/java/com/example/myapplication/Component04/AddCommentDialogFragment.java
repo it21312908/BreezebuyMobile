@@ -58,7 +58,7 @@ public class AddCommentDialogFragment extends DialogFragment {
         submitButton = view.findViewById(R.id.submitButton);
 
         // Get vendorId, userId, and token from arguments
-        vendorId = getArguments().getString("vendorId");
+        vendorId = getArguments().getString("vendorId"); // Retrieve vendorId
         userId = getArguments().getString("userId"); // Retrieve userId
         token = getArguments().getString("token"); // Retrieve token
 
