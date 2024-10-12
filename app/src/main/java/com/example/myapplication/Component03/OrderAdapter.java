@@ -26,10 +26,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         this.onOrderClickListener = listener;
     }
 
-    public OrderAdapter(Context context, List<Order> orderList) {
-        this.context = context;
-        this.orderList = orderList;
-    }
+    
 
     @NonNull
     @Override
