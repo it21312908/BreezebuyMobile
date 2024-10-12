@@ -22,7 +22,7 @@ public class AddCommentDialogFragment extends DialogFragment {
 
     private EditText commentEditText;
     private RatingBar ratingBar;
-    private Button submitButton;
+    private Button submitButton; 
     private String vendorId;
     private String userId; // Declare userId
     private String token; // Declare token
