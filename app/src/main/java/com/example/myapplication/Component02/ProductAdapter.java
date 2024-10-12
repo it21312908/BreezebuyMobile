@@ -75,11 +75,6 @@ public class ProductAdapter extends BaseAdapter {
             }
         });
 
-
-
-
-
-
         increaseButton.setOnClickListener(v -> {
             product.setQuantity(product.getQuantity() + 1);
             quantityText.setText(String.valueOf(product.getQuantity()));
