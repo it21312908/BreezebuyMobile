@@ -1,3 +1,4 @@
+//view all vendors
 package com.example.myapplication.Component04;
 
 import android.content.Intent;

@@ -1,3 +1,4 @@
+//  VendorAdapter class
 package com.example.myapplication.Component04;
 
 import android.content.Context;
