@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "1a2b3c4d5e",
+    "UserId": "12345",
+    "Items": [
+      {
+        "ProductId": "66faab75e93a7ab62be3cdfe",
+        "ProductName": "Fan",
+        "Price": "360000.00",
+        "Quantity": 2
+      },
+      {
+        "ProductId": "66fa8779d060363c33d4cf3d",
+        "ProductName": "IPhone",
+        "Price": "150000.00",
+        "Quantity": 1
+      }
+    ]
+  },
+  {
+    "_id": "2f3g4h5i6j",
+    "UserId": "67890",
+    "Items": [
+      {
+        "ProductId": "66faab75e93a7ab62be3cdff",
+        "ProductName": "Laptop",
+        "Price": "750000.00",
+        "Quantity": 1
+      },
+      {
+        "ProductId": "66fa8779d060363c33d4cf3e",
+        "ProductName": "Headphones",
+        "Price": "15000.00",
+        "Quantity": 3
+      }
+    ]
+  }
+]
