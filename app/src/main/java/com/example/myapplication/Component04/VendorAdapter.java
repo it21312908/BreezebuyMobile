@@ -69,7 +69,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.VendorView
         TextView vendorProduct;
         TextView vendorDescription;
         TextView vendorComments;
-        RatingBar vendorRating;
+        RatingBar vendorRating; 
 
         public VendorViewHolder(@NonNull View itemView) {
             super(itemView);
