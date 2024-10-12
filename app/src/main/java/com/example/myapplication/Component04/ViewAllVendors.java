@@ -157,7 +157,7 @@ public class ViewAllVendors extends AppCompatActivity {
 
     public void showAddCommentDialog(String vendorId) {
         AddCommentDialogFragment dialogFragment = AddCommentDialogFragment.newInstance(vendorId, userId, token);
-        dialogFragment.show(getSupportFragmentManager(), "AddComment");
+        dialogFragment.show(getSupportFragmentManager(), "AddComment"); 
     }
 
     private void setupBottomNavigation(String userId, String token, String username, String email, String[] roles) {
