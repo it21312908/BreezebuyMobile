@@ -89,7 +89,7 @@ public class ViewAllVendors extends AppCompatActivity {
         String url = "https://pasindu99-001-site1.etempurl.com/api/Vendor";
 
         // Show loading indicator
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE); // Show the ProgressBar
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
