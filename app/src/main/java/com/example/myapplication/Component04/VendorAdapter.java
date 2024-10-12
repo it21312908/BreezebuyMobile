@@ -42,7 +42,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.VendorView
         Vendor vendor = vendorList.get(position);
         holder.vendorName.setText(vendor.getName());
         holder.vendorProduct.setText(vendor.getProduct());
-        holder.vendorDescription.setText(vendor.getDescription());
+        holder.vendorDescription.setText(vendor.getDescription()); 
         holder.vendorRating.setRating((float) vendor.getAverageRating());
 
         StringBuilder commentsText = new StringBuilder();
