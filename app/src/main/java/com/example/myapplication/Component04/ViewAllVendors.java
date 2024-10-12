@@ -123,7 +123,7 @@ public class ViewAllVendors extends AppCompatActivity {
 
     private void parseVendorData(JSONArray response) {
         try {
-            for (int i = 0; i < response.length(); i++) {
+            for (int i = 0; i < response.length(); i++) { 
                 JSONObject vendorObject = response.getJSONObject(i);
                 String id = vendorObject.getString("id");
                 String name = vendorObject.getString("name");
