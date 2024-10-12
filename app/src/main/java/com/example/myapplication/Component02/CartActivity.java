@@ -81,10 +81,7 @@ public class CartActivity extends AppCompatActivity {
         } else {
             Log.d("CartActivity", "No saved order data found.");
         }
-
-
-
-
+        
         // Retrieve Intent extras
         Intent intent = getIntent();
         userId = intent.getStringExtra(EXTRA_USER_ID);
