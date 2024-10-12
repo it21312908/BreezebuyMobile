@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "66fab746f32ba70f32df1dd0",
+    "username": "customer",
+    "email": "yeran@gmail.com",
+    "passwordHash": "Abcd@1234",
+    "roles": [
+      {
+        "role": "Customer"
+      }
+    ],
+    "status": "active"
+  },
+  {
+    "_id": "77fab746f32ba70f32df1ee1",
+    "username": "Alex",
+    "email": "alex@gmail.com",
+    "passwordHash": "$2a$11$AKlu8PppiloCSsE/j8lCBeQpmVYQds0vHnBmbz0Y8kyTKgU.MgXyz",
+    "roles": [
+      {
+        "role": "Customer"
+      }
+    ],
+    "status": "active"
+  }
+]

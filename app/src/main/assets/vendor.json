@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "66f8d07421776a0b42b95b18",
+    "name": "Vendor1",
+    "product": "Mobile Phone",
+    "description": "Best Price, Good Condition",
+    "userId": "66f8d04f21776a0b42b95b17",
+    "averageRating": 5,
+    "comments": [
+      {
+        "userId": "123456",
+        "comment": "Great service!",
+        "rating": 5,
+        "date": "2024-10-02"
+      }
+    ]
+  },
+  {
+    "_id": "66f8d07421776a0b42b95b19",
+    "name": "Vendor2",
+    "product": "Laptop",
+    "description": "High performance and reliable",
+    "userId": "66f8d04f21776a0b42b95b18",
+    "averageRating": 4,
+    "comments": [
+      {
+        "userId": "654321",
+        "comment": "Value for money.",
+        "rating": 4,
+        "date": "2024-10-01"
+      },
+      {
+        "userId": "789012",
+        "comment": "Good support!",
+        "rating": 5,
+        "date": "2024-10-03"
+      }
+    ]
+  }
+]
