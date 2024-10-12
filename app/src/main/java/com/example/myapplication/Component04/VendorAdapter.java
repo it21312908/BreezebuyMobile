@@ -46,7 +46,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.VendorView
         holder.vendorRating.setRating((float) vendor.getAverageRating());
 
         StringBuilder commentsText = new StringBuilder();
-        for (Comment comment : vendor.getComments()) {
+        for (Comment comment : vendor.getComments()) { 
             commentsText.append(comment.getCommentText()).append("\n");
         }
         holder.vendorComments.setText(commentsText.toString());
