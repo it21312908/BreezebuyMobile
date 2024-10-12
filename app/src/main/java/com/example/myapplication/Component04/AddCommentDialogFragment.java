@@ -53,7 +53,7 @@ public class AddCommentDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_add_comment, container, false);
 
-        commentEditText = view.findViewById(R.id.commentEditText);
+        commentEditText = view.findViewById(R.id.commentEditText); 
         ratingBar = view.findViewById(R.id.ratingBar);
         submitButton = view.findViewById(R.id.submitButton);
 
