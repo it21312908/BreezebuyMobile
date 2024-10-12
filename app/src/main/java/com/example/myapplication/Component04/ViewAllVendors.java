@@ -162,7 +162,7 @@ public class ViewAllVendors extends AppCompatActivity {
 
     private void setupBottomNavigation(String userId, String token, String username, String email, String[] roles) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> { 
             int id = item.getItemId();
             if (id == R.id.button_home) {
                 openActivity(MainActivity.class, userId, token, username, email, roles);
