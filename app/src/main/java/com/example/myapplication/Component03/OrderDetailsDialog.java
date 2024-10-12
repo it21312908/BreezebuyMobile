@@ -180,7 +180,7 @@ public class OrderDetailsDialog extends Dialog {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), "Error updating order status: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error updating order status, retry: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
