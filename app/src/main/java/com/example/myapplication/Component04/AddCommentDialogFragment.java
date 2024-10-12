@@ -33,7 +33,7 @@ public class AddCommentDialogFragment extends DialogFragment {
         args.putString("vendorId", vendorId);
         args.putString("userId", userId); // Pass userId here
         args.putString("token", token); // Pass token here
-        fragment.setArguments(args);
+        fragment.setArguments(args); // Set the arguments
         return fragment;
     }
 
