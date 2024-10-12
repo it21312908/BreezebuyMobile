@@ -10,7 +10,7 @@ public class Comment {
     public Comment(String id, String customerId, int rank, String commentText, boolean isCommentEditable) {
         this.id = id;
         this.customerId = customerId;
-        this.rank = rank;
+        this.rank = rank; 
         this.commentText = commentText;
         this.isCommentEditable = isCommentEditable;
     }
