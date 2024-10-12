@@ -338,16 +338,6 @@ public class ProductBrowsingActivity extends AppCompatActivity implements Produc
         startActivity(intent);
     }
 
-//    private void updateTotalAmount() {
-//        double totalAmount = 0;
-//        for (Product product : filteredProductList) {
-//            if (product.isSelected()) {
-//                totalAmount += product.getPrice() * product.getQuantity(); // Calculate total price based on selected products
-//            }
-//        }
-//        totalAmountText.setText("Total Amount: $" + String.format("%.2f", totalAmount)); // Update total amount text view
-//    }
-
     @Override
     public void onProductCheckedChanged() {
         updateTotalAmount(); // Recalculate total whenever product selection changes
