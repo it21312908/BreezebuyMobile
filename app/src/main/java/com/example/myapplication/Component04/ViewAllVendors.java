@@ -100,7 +100,7 @@ public class ViewAllVendors extends AppCompatActivity {
                         parseVendorData(response);
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener() { // Handle errors
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Hide loading indicator
