@@ -1,24 +1,51 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 
+* activity_user_profile.xml
+ * Author: [Dayananda I.H.M.B.L. | IT21307058]
+ -->
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="@drawable/background_gradient"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <!-- Edit Username -->
     <EditText
-        android:id="@+id/editUsername"
+        android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter new username"/>
+        android:hint="New Username" />
 
-    <!-- Edit Email -->
     <EditText
-        android:id="@+id/editEmail"
+        android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter new email"
-        android:inputType="textEmailAddress"/>
+        android:hint="Email" />
 
+    <EditText
+        android:id="@+id/editTextCurrentPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Current Password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextNewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="New Password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/editTextConfirmNewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm New Password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/buttonUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update" />
 </LinearLayout>

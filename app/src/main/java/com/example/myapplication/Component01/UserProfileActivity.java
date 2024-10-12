@@ -1,35 +1,61 @@
+/*
+ * UserProfileActivity.java
+ * Author: [Dayananda I.H.M.B.L. | IT21307058]
+ * This code defines an UserProfileActivity class for an Android 
+ * app that handles displaying and updating user profiles. It 
+ * interacts with a remote server to fetch user data, update profile 
+ * information, and deactivate accounts. The activity also implements 
+ * bottom navigation for navigation between different sections of the app.
+ 
+ */
+
 package com.example.myapplication.Component01;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.app.AlertDialog;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.Component02.ProductBrowsingActivity;
+import com.example.myapplication.Component03.OrderTrackingActivity;
+import com.example.myapplication.Component04.ViewAllVendors;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class UserProfileActivity extends AppCompatActivity {
 
     private TextView textViewId, textViewUsername, textViewEmail, textViewStatus;
-    private Button buttonDeactivate, buttonUpdateProfile;
-    private ImageView profileImage;
-    String _id = "66fab746f32ba70f32df1dd0"; // Replace this with the desired user ID
+    private Button buttonDeactivate, buttonUpdateProfile, buttonLogout; // Added logout button
+    private String userId; // Store user ID for API call
+    private String currentEmail; // Store current email for the request
+    private String token; // Store token for authentication
+    private static final String EXTRA_USER_ID = "USER_ID";
+    private static final String EXTRA_TOKEN = "TOKEN";
+    private static final String EXTRA_USERNAME = "USERNAME";
+    private static final String EXTRA_EMAIL = "EMAIL";
+    private static final String EXTRA_ROLES = "ROLES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,138 +63,280 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         // Initialize views
-        textViewId = findViewById(R.id.textViewId); // Add this line
+//        textViewId = findViewById(R.id.textViewId);
         textViewUsername = findViewById(R.id.textViewUsername);
         textViewEmail = findViewById(R.id.textViewEmail);
-        textViewStatus = findViewById(R.id.textViewStatus);
         buttonDeactivate = findViewById(R.id.buttonDeactivate);
         buttonUpdateProfile = findViewById(R.id.buttonUpdateProfile);
-        profileImage = findViewById(R.id.profileImage);
+        buttonLogout = findViewById(R.id.buttonLogout); // Initialize logout button
 
-        // Load user data from JSON
-        loadUserDataFromJson();
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("USER_ID");
+        token = intent.getStringExtra("TOKEN");
+        String[] roles = intent.getStringArrayExtra("ROLES");
+        String username = intent.getStringExtra("USERNAME");
+        currentEmail = intent.getStringExtra("EMAIL");
 
-        // Handle Update Profile button click
-        buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showUpdateProfileDialog();
-            }
-        });
+        // Display the user data
+        if (userId != null) {
+//            textViewId.setText("User ID: " + userId);
+        }
+        if (username != null) {
+            textViewUsername.setText("Username: " + username);
+        }
+        if (currentEmail != null) {
+            textViewEmail.setText("Email: " + currentEmail);
+        }
 
-        // Handle Deactivate button click
-        buttonDeactivate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeactivateConfirmation();
-            }
-        });
+        // Set up button click listeners
+        buttonDeactivate.setOnClickListener(v -> deactivateAccount());
+        buttonUpdateProfile.setOnClickListener(v -> showUpdateProfileDialog());
+        buttonLogout.setOnClickListener(v -> logout()); // Set listener for logout
+
+        // Setup Bottom Navigation
+        setupBottomNavigation(userId, token, username, currentEmail, roles); // Pass token to the bottom navigation
+        fetchUserData();
     }
 
-    // Load user data from user.json
-    private void loadUserDataFromJson() {
-        try {
-            // Open the JSON file from assets
-            InputStream is = getAssets().open("user.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
+    // Fetch user data from the server and display it on the profile screen
+    private void fetchUserData() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://pasindu99-001-site1.etempurl.com/Auth/me";
 
-            // Convert the buffer into a string
-            String json = new String(buffer, "UTF-8");
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
 
-            // Parse the JSON string to get the user array
-            JSONArray jsonArray = new JSONArray(json);
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("FetchUserData", "Request failed", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(UserProfileActivity.this, "Failed to fetch user data", Toast.LENGTH_SHORT).show();
+                });
+            }
 
-            // Loop through the array and find the user with the specific _id
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String userId = jsonObject.getString("_id");
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        String userId = jsonObject.getString("id");
+                        String username = jsonObject.getString("username");
+                        String email = jsonObject.getString("email");
 
-                // Check if this is the user we want
-                if (userId.equals(_id)) {
-                    String username = jsonObject.getString("username");
-                    String email = jsonObject.getString("email");
-                    String status = jsonObject.getString("status");
-
-                    // Update the UI with the loaded user data
-                    textViewId.setText("User ID: " + userId); // Ensure this TextView is added in the layout
-                    textViewUsername.setText("Username: " + username);
-                    textViewEmail.setText("Email: " + email);
-                    textViewStatus.setText("Status: " + status);
-                    break; // Exit loop once the user is found
+                        runOnUiThread(() -> {
+//                            textViewId.setText("User ID: " + userId);
+                            textViewUsername.setText("Username: " + username);
+                            textViewEmail.setText("Email: " + email);
+                        });
+                    } catch (Exception e) {
+                        Log.e("FetchUserData", "JSON parsing error", e);
+                    }
+                } else {
+                    Log.e("FetchUserData", "Response Code: " + response.code());
+                    runOnUiThread(() -> {
+                        Toast.makeText(UserProfileActivity.this, "Failed to fetch user data: " + response.code(), Toast.LENGTH_SHORT).show();
+                    });
                 }
             }
-
-        } catch (IOException e) {
-            Log.e("UserProfileActivity", "IOException: " + e.getMessage());
-            Toast.makeText(this, "Failed to load user data: IOException", Toast.LENGTH_SHORT).show();
-        } catch (JSONException e) {
-            Log.e("UserProfileActivity", "JSONException: " + e.getMessage());
-            Toast.makeText(this, "Failed to load user data: JSONException", Toast.LENGTH_SHORT).show();
-        }
+        });
     }
 
-    // Show update profile dialog
-    private void showUpdateProfileDialog() {
-        // Inflate the dialog layout
-        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_update_profile, null);
-        final TextView editUsername = dialogView.findViewById(R.id.editUsername);
-        final TextView editEmail = dialogView.findViewById(R.id.editEmail);
+    // Send a request to deactivate the user's account
+    private void deactivateAccount() {
+        OkHttpClient client = new OkHttpClient();
 
-        // Get current values
-        String currentUsername = textViewUsername.getText().toString().replace("Username: ", "");
-        String currentEmail = textViewEmail.getText().toString().replace("Email: ", "");
+        // Send PUT request to deactivate account
+        String url = "https://pasindu99-001-site1.etempurl.com/Auth/deactivateAccount";
 
-        // Set current values in edit texts
-        editUsername.setText(currentUsername);
-        editEmail.setText(currentEmail);
+        // Create the request without a body
+        Request request = new Request.Builder()
+                .url(url)
+                .put(RequestBody.create(null, new byte[0])) // Use empty body for PUT request
+                .addHeader("Authorization", "Bearer " + token) // Add the authorization token
+                .build();
 
-        new AlertDialog.Builder(this)
-                .setTitle("Update Profile")
-                .setView(dialogView)
-                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newUsername = editUsername.getText().toString().trim();
-                        String newEmail = editEmail.getText().toString().trim();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Log the exception for debugging
+                Log.e("DeactivateAccount", "Request failed", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(UserProfileActivity.this, "Failed to deactivate account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
 
-                        // Save updated data to SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("username", newUsername);
-                        editor.putString("email", newEmail);
-                        editor.apply();
-
-                        // Update the displayed values
-                        textViewUsername.setText("Username: " + newUsername);
-                        textViewEmail.setText("Email: " + newEmail);
-                        Toast.makeText(UserProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    // Show confirmation dialog for account deactivation
-    private void showDeactivateConfirmation() {
-        new AlertDialog.Builder(this)
-                .setTitle("Deactivate Account")
-                .setMessage("Are you sure you want to deactivate your account?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Perform account deactivation logic (e.g., logout, disable account)
-                        Toast.makeText(UserProfileActivity.this, "Account deactivated", Toast.LENGTH_SHORT).show();
-                        // Go back to login screen after deactivation
-                        Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // Check response details
+                Log.d("DeactivateAccount", "Response Code: " + response.code());
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        // Correct context reference for Intent
+                        Intent intent = new Intent(UserProfileActivity.this, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(UserProfileActivity.this, "Failed to deactivate account: " + response.code(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
+    }
+
+    // Display a dialog for updating the user's profile details (username, email, password)
+    private void showUpdateProfileDialog() {
+        // Inflate dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_update_profile, null);
+
+        // Initialize dialog views
+        EditText editTextUsername = dialogView.findViewById(R.id.editTextUsername);
+        EditText editTextEmail = dialogView.findViewById(R.id.editTextEmail);
+        EditText editTextCurrentPassword = dialogView.findViewById(R.id.editTextCurrentPassword);
+        EditText editTextNewPassword = dialogView.findViewById(R.id.editTextNewPassword);
+        EditText editTextConfirmNewPassword = dialogView.findViewById(R.id.editTextConfirmNewPassword);
+        Button buttonUpdate = dialogView.findViewById(R.id.buttonUpdate);
+
+        // Pre-fill the email field with the current email
+        editTextEmail.setText(currentEmail);
+
+        // Safely set the current username
+        String[] usernameParts = textViewUsername.getText().toString().split(": ");
+        if (usernameParts.length > 1) {
+            editTextUsername.setText(usernameParts[1]); // Set current username
+        } else {
+            editTextUsername.setText(""); // Fallback if username is not available
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Update Profile")
+                .setView(dialogView)
+                .create();
+
+        buttonUpdate.setOnClickListener(v -> {
+            String newUsername = editTextUsername.getText().toString().trim();
+            String newEmail = editTextEmail.getText().toString().trim();
+            String currentPassword = editTextCurrentPassword.getText().toString().trim();
+            String newPassword = editTextNewPassword.getText().toString().trim();
+            String confirmNewPassword = editTextConfirmNewPassword.getText().toString().trim();
+
+            // Validate input
+            if (newPassword.equals(confirmNewPassword)) {
+                // Call the updateProfile method
+                updateProfile(newUsername, newEmail, currentPassword, newPassword, dialog);
+            } else {
+                Toast.makeText(this, "New passwords do not match", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
+    }
+    
+    // Send a request to update the user's profile with new information
+    private void updateProfile(String username, String email, String currentPassword, String newPassword, AlertDialog dialog) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Create JSON object for request body
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username);
+            jsonObject.put("email", email); // Use the new email from input
+            jsonObject.put("CurrentPassword", currentPassword);
+            jsonObject.put("NewPassword", newPassword);
+            jsonObject.put("ConfirmNewPassword", newPassword); // Confirming the new password
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Send PUT request to update the profile
+        String url = "https://pasindu99-001-site1.etempurl.com/Auth/update/" + userId; // Modify URL to include user ID
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .put(body)
+                .addHeader("Authorization", "Bearer " + token) // Add the authorization token
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("UpdateProfile", "Request failed", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(UserProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss(); // Dismiss dialog on failure
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(UserProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                        // Update displayed user data
+                        textViewUsername.setText("Username: " + username);
+                        textViewEmail.setText("Email: " + email); // Update displayed email
+                        currentEmail = email; // Store updated email
+                        dialog.dismiss(); // Dismiss dialog on success
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(UserProfileActivity.this, "Failed to update profile: " + response.code(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss(); // Dismiss dialog on failure
+                    });
+                }
+            }
+        });
+    }
+    
+    // Log out the user and redirect to the login screen
+    private void logout() {
+        // Perform logout actions
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // Set up bottom navigation for the user profile screen
+    private void setupBottomNavigation(String userId, String token, String username, String email, String[] roles) {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.button_home) {
+                openActivity(MainActivity.class, userId, token, username, email, roles);
+                return true;
+            } else if (id == R.id.button_products) {
+                openActivity(ProductBrowsingActivity.class, userId, token, username, email, roles);
+                return true;
+            } else if (id == R.id.button_all_vendors) {
+                openActivity(ViewAllVendors.class, userId, token, username, email, roles);
+                return true;
+            } else if (id == R.id.button_order_history) {
+                openActivity(OrderTrackingActivity.class, userId, token, username, email, roles); // Adjust to your OrderHistoryActivity
+                return true;
+            } else if (id == R.id.button_profile) {
+                return true;
+            }
+            return false;
+        });
+    }
+
+    // Open the specified activity with user information passed as extras
+    private void openActivity(Class<?> activityClass, String userId, String token, String username, String email, String[] roles) {
+        Intent intent = new Intent(UserProfileActivity.this, activityClass);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_TOKEN, token);
+        intent.putExtra(EXTRA_USERNAME, username);
+        intent.putExtra(EXTRA_EMAIL, email);
+        intent.putExtra(EXTRA_ROLES, roles);
+        startActivity(intent);
     }
 }
